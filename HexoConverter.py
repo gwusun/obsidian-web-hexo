@@ -14,6 +14,7 @@ log = get_logger()
 """
 -  Only convert for specified tags, default containing tag: public
 -  Remove all space ' '. 
+- 支持 pdf.jpeg 
 """
 
 
@@ -86,7 +87,7 @@ class HexoConverter:
     md_exts = ['.md']
 
     def __init__(self, home, target, share_tag="public", target_md_dir="source/_posts",
-                 target_assets_dir="source/images", imgs_exts=['.png', '.gif', 'jpg', 'jpeg']
+                 target_assets_dir="source/images", statics_ext=['.png', '.gif', 'jpg', 'jpeg', '.pdf', '.excalidraw']
                  , callbacks=[]):
         """
         Parameters
@@ -111,7 +112,7 @@ class HexoConverter:
         self._home = home
         self._share_tag = share_tag
         self._target = target
-        self._imgs_exts = imgs_exts
+        self._statics_ext = statics_ext
         self._callbacks = callbacks
         assert isinstance(target_assets_dir, str), "target_assets_dir must be a string"
         assert target_assets_dir.find("\\") == -1, "target_assets_dir cannot contain \\"
@@ -254,7 +255,7 @@ class HexoConverter:
         for source_link in links:
             target_link = source_link.split("|")[0]
             ext = os.path.splitext(target_link)[-1]
-            if ext in self._imgs_exts:
+            if ext in self._statics_ext:
                 # source static file
                 source = os.path.join(self._home, target_link)
 

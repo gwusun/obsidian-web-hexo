@@ -85,12 +85,10 @@ aliases:
         c.parse_markdown()
 
     def test_wikilink_convert(self):
+        assert self.c._convert_wiki_images("![[b.pdf]]") == '![b.pdf](/images/b.pdf)'
         assert self.c._convert_wiki_images("![[b.png|300]]") == '![b.png](/images/b.png)'
-        assert self.c._convert_wiki_images("![[a]]") == '![[a]]'
         assert self.c._convert_wiki_images("![[b.png]]") == '![b.png](/images/b.png)'
-
-    def test_wikilink_mardown(self):
-        assert self.c._convert_wiki_markdown("[[培训资料/贵州大学/22商业数据分析/01 - 商业数据分析中常见的技术]]")
+        assert self.c._convert_wiki_images("![[a]]") == '![[a]]'
 
     def test_math_converter(self):
         assert "\n$$math$$\n" == insert_new_line_for_math("$$math$$")
