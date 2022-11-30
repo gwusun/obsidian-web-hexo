@@ -3,19 +3,18 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: SW-KnowledgeBase
-subtitle: ''
+title: Knowledge
 description: ''
 keywords:
-author: SunWu
+author: gsunwu@163.com
 language: en
 timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
-#permalink: :year/:month/:day/:title/
-permalink: :name.html
+url: https://gwusun.lessonplan.com
+#permalink: :year/:month/:day/:name.html
+permalink: docs/:name.html
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
@@ -133,21 +132,21 @@ search:
 
 # Markdown-it config
 ## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki
-markdown:
-  render:
-    html: true
-    xhtmlOut: false
-    breaks: true
-    linkify: true
-    typographer: true
-  plugins:
-    - '@neilsustc/markdown-it-katex'
-  anchors:
-    level: 2
-    collisionSuffix: 't'
-    permalink: false
-    permalinkClass: header-anchor
-    permalinkSymbol: ''
+#markdown:
+#  render:
+#    html: true
+#    xhtmlOut: false
+#    breaks: true
+#    linkify: true
+#    typographer: true
+#  plugins:
+#    - '@neilsustc/markdown-it-katex'
+#  anchors:
+#    level: 2
+#    collisionSuffix: 't'
+#    permalink: false
+#    permalinkClass: header-anchor
+#    permalinkSymbol: ''
 
 mathjax:
   tags: all # or 'ams' or 'all'

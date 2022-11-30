@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from HexoConverter import HexoConverter, insert_new_line_for_math
+from HexoConverter import HexoConverter, insert_new_line_for_math, convert_wiki_markdown_to_markdown_link
 
 
 class TestConverter(TestCase):
@@ -95,3 +95,10 @@ aliases:
     def test_math_converter(self):
         assert "\n$$math$$\n" == insert_new_line_for_math("$$math$$")
         assert '`$$math$$`' == insert_new_line_for_math("`$$math$$`")
+
+    def test_link_convert(self):
+        assert convert_wiki_markdown_to_markdown_link("$[[aa]]$") == '$[[aa]]$'
+        assert convert_wiki_markdown_to_markdown_link("[[aa]]$") == '[[aa]]$'
+        assert convert_wiki_markdown_to_markdown_link("![[aa]]") == '![[aa]]'
+        assert convert_wiki_markdown_to_markdown_link("[[aa]]") == '[aa](aa.html)'
+        assert convert_wiki_markdown_to_markdown_link("[[aa.pdf]]") == '[aa.pdf](aa.pdf)'

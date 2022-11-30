@@ -12,7 +12,8 @@ from util_log import get_logger
 log = get_logger()
 
 """
-1. Only convert for specified tags, default containing tag: public
+-  Only convert for specified tags, default containing tag: public
+-  Remove all space ' '. 
 """
 
 
@@ -36,6 +37,33 @@ def insert_new_line_for_math(content):
         if prex:
             continue
         content = content.replace(link, f"\n{link}\n")
+    return content
+
+
+def convert_wiki_markdown_to_markdown_link(content):
+    """
+    #  convert [[xx]] to link, which not start with ! and end with $
+    Parameters
+    ----------
+    content :
+
+    Returns
+    -------
+
+    """
+    links = re.findall("(?<!!)\[\[(.*?)\]\](?!\$)", content)
+    for source_link in links:
+        link_remove_jinhao: str = source_link.split("#")[0]
+        # source static file
+        link_remove_jinhao_and_space = link_remove_jinhao.split('/')[-1].replace(" ", "")
+        wiki_link_reg = f"[[{source_link}]]"
+
+        _ext = os.path.splitext(link_remove_jinhao_and_space)[-1]
+        if _ext == "":
+            target_line = f"[{link_remove_jinhao_and_space}]({link_remove_jinhao_and_space}.html)"
+        else:
+            target_line = f"[{link_remove_jinhao_and_space}]({link_remove_jinhao_and_space})"
+        content = content.replace(wiki_link_reg, target_line)
     return content
 
 
@@ -124,19 +152,6 @@ class HexoConverter:
             else:
                 self._get_whole_files(_file)
 
-    def get_images(self):
-        imgs = []
-        for file in self._relative_all:
-            _ext = os.path.splitext(file)[-1]
-            if _ext in self.imgs_exts:
-                relative_path = str(file).replace(self._home, "")
-                if relative_path.startswith("/"):
-                    relative_path = relative_path[1:]
-                imgs.append(relative_path)
-                print(f"Found image [{relative_path}]")
-
-        return imgs
-
     def get_file_ext(self, file):
         return os.path.splitext(file)[-1]
 
@@ -175,16 +190,19 @@ class HexoConverter:
         -------
 
         """
-        if not isinstance(yaml_formatter, dict):
+        try:
+            if not isinstance(yaml_formatter, dict):
+                return False
+            tags = yaml_formatter.get('tags')
+            if isinstance(tags, str):
+                if tags.lower() == self._share_tag.lower():
+                    return True
+            if isinstance(tags, list):
+                tags = [str(tag).lower() if tag is not None else self._share_tag for tag in tags]
+                return self._share_tag in tags
             return False
-        tags = yaml_formatter.get('tags')
-        if isinstance(tags, str):
-            if tags.lower() == self._share_tag.lower():
-                return True
-        if isinstance(tags, list):
-            tags = [tag.lower() for tag in tags]
-            return self._share_tag in tags
-        return False
+        except Exception as e:
+            raise e
 
     def _get_md_formatter(self, content):
         yaml_for = re.search("^---(.*?)---", content, re.S)
@@ -201,7 +219,6 @@ class HexoConverter:
 
     def _write_md(self, file, content, yaml_formatter):
         content = self._convert_wiki_images(content)
-        content = self._convert_wiki_markdown(content)
         for fun in self._callbacks:
             content = fun(content)
 
@@ -209,7 +226,8 @@ class HexoConverter:
             log.warning(F"Content of  {file} is None    ")
             return
         else:
-            target_file_path = os.path.join(self._target, self._target_md_dir, os.path.basename(file))
+            target_file_path = os.path.join(self._target, self._target_md_dir, os.path.basename(file)) \
+                .replace(" ", "")
             if not os.path.exists(os.path.dirname(target_file_path)):
                 os.makedirs(os.path.dirname(target_file_path))
             with open(target_file_path, "w") as f:
@@ -250,35 +268,9 @@ class HexoConverter:
                     shutil.copyfile(source, target)
 
                 # Change the link content
-
                 wiki_link_reg = f"![[{source_link}]]"
                 target_line = f"![{os.path.basename(target)}]({target.split('|')[0].replace(self._target, '').replace(self._target_assets_dir.split('/')[0], '')[1:]})"
                 content = content.replace(wiki_link_reg, target_line)
-
-        return content
-
-    def _convert_wiki_markdown(self, content):
-        """
-        Convert [[markdown_file_link]] to <a href="xx">title</a>
-
-        Parameters
-        ----------
-        content :
-
-        Returns
-        -------
-
-        """
-        links = re.findall("(?!!)\[\[(.*?)\]\]", content)
-        for source_link in links:
-            target_link: str = source_link.split("#")[0]
-            # source static file
-
-            wiki_link_reg = f"[[{source_link}]]"
-
-            href = target_link.split("/")[-1] + ".html"
-            target_line = f"<a href='{href}'>{source_link}</a>"
-            content = content.replace(wiki_link_reg, target_line)
 
         return content
 
@@ -287,5 +279,6 @@ if __name__ == '__main__':
     HexoConverter(home=str(sys.argv[1]).strip(),
                   target=str(sys.argv[2]).strip(),
                   callbacks=[insert_new_line_for_math,
-                             convert_obsidian_toc_to_hexo_toc]
+                             convert_obsidian_toc_to_hexo_toc,
+                             convert_wiki_markdown_to_markdown_link]
                   ).parse_markdown()
