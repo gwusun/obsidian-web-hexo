@@ -4,17 +4,174 @@
 
 # Site
 title: Knowledge
-description: ''
+description:
 keywords:
 author: gsunwu@163.com
-language: en
+language: zh-CN
 timezone: ''
+
+# Extensions
+## Plugins: https://hexo.io/plugins/
+## Themes: https://hexo.io/themes/
+#theme: next
+theme: butterfly
+# butterfly theme config
+theme_config:
+  sharejs:
+    enable: true
+    sites: wechat,qq
+  index_site_info_top: 100px # 主页标题距离顶部距离  例如 300px/300em/300rem/10%
+  index_top_img_height: 267px #主页top_img高度 例如 300px/300em/300rem  不能使用百分比
+  # 打字效果
+  subtitle:
+    startDelay: 300 # time before typing starts in milliseconds
+    typeSpeed: 88 # type speed in milliseconds
+    backSpeed: 50 # backspacing speed in millisecondss
+    enable: true
+    source: false
+    sub:
+      - DO A PLAN BEFORE EVERY THING
+  anchor:
+    button:
+      enable: true
+      always_show: false
+      icon: # the unicode value of Font Awesome icon, such as '\3423'
+    auto_update: true # when you scroll in post, the URL will update according to header id
+  top_img: 'linear-gradient(20deg, #0062be, #925696, #cc426e, #fb0347)'
+  footer:
+    owner:
+      enable: true
+      since: 2020
+    custom_text: <a href="http://www.beian.miit.gov.cn/"    target="_blank">黔ICP备2022009239号-1</a>
+    copyright: false # Copyright of theme and framework
+  post_copyright:
+    enable: false
+    decode: false
+    author_href:
+    license: CC BY-NC-SA 4.0
+    license_url: https://creativecommons.org/licenses/by-nc-sa/4.0/
+  related_post:
+    enable: false
+    limit: 3 # 顯示推薦文章數目
+    date_type: created # or created or updated 文章日期顯示創建日或者更新日
+  busuanzi:
+    site_uv: false
+    site_pv: false
+    page_pv: false
+  fancybox: true
+  canvas_ribbon:
+    enable: true
+    size: 150
+    alpha: 0.6
+    zIndex: -1
+    click_to_change: true  #設置是否每次點擊都更換綵帶
+    mobile: false # false 手機端不顯示 true 手機端顯示
+  cover:
+    # display the cover or not (是否顯示文章封面)
+    index_enable: false
+    aside_enable: false
+    archives_enable: false
+    position: both
+    default_cover:
+      - https://cdn.jsdelivr.net/gh/Justlovesmile/CDN2/post/cover1.JPG
+      - https://cdn.jsdelivr.net/gh/Justlovesmile/CDN2/post/cover2.jpg
+      - https://cdn.jsdelivr.net/gh/Justlovesmile/CDN2/post/cover3.jpg
+      - https://cdn.jsdelivr.net/gh/Justlovesmile/CDN2/post/cover4.jpg
+      - https://cdn.jsdelivr.net/gh/Justlovesmile/CDN2/post/cover5.JPG
+      - https://cdn.jsdelivr.net/gh/Justlovesmile/CDN2/post/cover6.JPG
+      - https://cdn.jsdelivr.net/gh/Justlovesmile/CDN2/post/cover7.JPG
+      - https://cdn.jsdelivr.net/gh/Justlovesmile/CDN2/post/cover8.JPG
+  toc:
+    post: true
+    page: false
+    number: true
+    expand: true
+    style_simple: false # for post
+  aside:
+    enable: true
+    hide: false
+    button: true
+    mobile: true # display on mobile
+    position: left # left or right
+    display:
+      archive: true
+      tag: true
+      category: true
+    card_author:
+      enable: true
+      description:
+      button:
+        enable: false
+        icon: fab fa-github
+        text: Follow Me
+        link: https://github.com/xxxxxx
+    card_announcement:
+      enable: false
+      content: This is my Blog
+    card_recent_post:
+      enable: false
+      limit: 5 # if set 0 will show all
+      sort: date # date or updated
+      sort_order: # Don't modify the setting unless you know how it works
+    card_categories:
+      enable: true
+      limit: 8 # if set 0 will show all
+      expand: none # none/true/false
+      sort_order: # Don't modify the setting unless you know how it works
+    card_tags:
+      enable: true
+      limit: 40 # if set 0 will show all
+      color: false
+      sort_order: # Don't modify the setting unless you know how it works
+    card_archives:
+      enable: false
+      type: monthly # yearly or monthly
+      format: MMMM YYYY # eg: YYYY年MM月
+      order: -1 # Sort of order. 1, asc for ascending; -1, desc for descending
+      limit: 8 # if set 0 will show all
+      sort_order: # Don't modify the setting unless you know how it works
+    card_webinfo:
+      enable: true
+      post_count: true
+      last_push_date: true
+      sort_order: # Don't modify the setting unless you know how it works
+  menu:
+    首页: /index.html || fa fa-home
+    标签: /tags/ || fa fa-tags
+    分类: /categories/ || fa fa-th
+    时间线: /archives/ || fa fa-archive
+  disable_top_img: false
+  fireworks:
+    enable: false
+    zIndex: 9999 # -1 or 9999
+    mobile: false
+  beautify:
+    enable: true
+  wordcount:
+    enable: true
+    post_wordcount: true
+    min2read: true
+    total_wordcount: true
+  error_404:
+    enable: true
+    subtitle: 'Page Not Found'
+    background: https://i.loli.net/2020/05/19/aKOcLiyPl2JQdFD.png
+  local_search:
+    enable: true
+    preload: true
+  copy:
+    enable: false
+    copyright:
+      enable: false
+      limit_count: 50
+
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: https://gwusun.lessonplan.com
+url: https://www.gwusun.top
 #permalink: :year/:month/:day/:name.html
-permalink: docs/:name.html
+#permalink: docs/:name.html
+permalink: p/:hash/
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
@@ -93,10 +250,7 @@ include:
 exclude:
 ignore:
 
-# Extensions
-## Plugins: https://hexo.io/plugins/
-## Themes: https://hexo.io/themes/
-theme: next
+
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
@@ -130,23 +284,6 @@ search:
   content: true
   format: html
 
-# Markdown-it config
-## Docs: https://github.com/celsomiranda/hexo-renderer-markdown-it/wiki
-#markdown:
-#  render:
-#    html: true
-#    xhtmlOut: false
-#    breaks: true
-#    linkify: true
-#    typographer: true
-#  plugins:
-#    - '@neilsustc/markdown-it-katex'
-#  anchors:
-#    level: 2
-#    collisionSuffix: 't'
-#    permalink: false
-#    permalinkClass: header-anchor
-#    permalinkSymbol: ''
 
 mathjax:
   tags: all # or 'ams' or 'all'
@@ -157,7 +294,10 @@ mathjax:
   every_page: true # if true, every page will be rendered by MathJax regardless the `mathjax` setting in Front-matter
   packages: # extra packages to load
   extension_options: { }
-  # you can put your extension options here
-  # see http://docs.mathjax.org/en/latest/options/input/tex.html#tex-extension-options for more detail
 
 
+ICP:
+  enable: true  # 是否启用ICP
+  url: https://beian.miit.gov.cn/  # 点击后的链接地址
+  text: 黔ICP备2022009239号-1 # 更改成自己的备案号
+  icon:    # 图标
