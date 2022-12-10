@@ -10,6 +10,17 @@ author: gsunwu@163.com
 language: zh-CN
 timezone:
 
+# URL
+## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
+url: https://www.gwusun.top
+#permalink: :year/:month/:day/:name.html
+#permalink: docs/:name.html
+permalink: :category/:hash.html
+permalink_defaults:
+pretty_urls:
+  trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
+  trailing_html: true # Set to false to remove trailing '.html' from permalinks
+
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
@@ -177,16 +188,7 @@ theme_config:
       limit_count: 50
 
 
-# URL
-## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: https://www.gwusun.top
-#permalink: :year/:month/:day/:name.html
-#permalink: docs/:name.html
-permalink: :category/:hash.html
-permalink_defaults:
-pretty_urls:
-  trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
-  trailing_html: true # Set to false to remove trailing '.html' from permalinks
+
 
 # Directory
 source_dir: source

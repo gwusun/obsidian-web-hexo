@@ -51,3 +51,23 @@ ngtcp2: 0.1.0-DEV
 nghttp3: 0.1.0-DEV
 
 ```
+
+## Tutorial
+
+### prepare the remote(server) nginx environment
+
+``` 
+make prepare
+```
+
+### update the public site to remote server
+
+``` 
+make d
+```
+
+### run local server
+
+``` 
+make run
+```

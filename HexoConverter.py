@@ -3,24 +3,42 @@ import pprint
 import re
 import shutil
 import sys
-from pysearchlib.utils.util_hash import get_str_hash
 import numpy as np
 import yaml
 from yaml import Loader
-
+import hashlib
 from util_log import get_logger
 
 log = get_logger()
 
 """
 - Only convert the .md  specified tags=public
-- 文件名随机生成, 利于分享
+- Randomly generated the image filename by UUID
 
 
-Markdown 格式参考:
-https://daringfireball.net/projects/markdown/basics
-https://daringfireball.net/projects/markdown/syntax
+ref:
+https://butterfly.js.org
 """
+
+
+def get_str_hash(string):
+    """
+    Get the hash code of string
+
+    Parameters
+    ----------
+    string : str
+        The input str
+
+    Returns
+    -------
+    str
+        The hash code of the string
+
+    """
+    if not isinstance(string, str):
+        raise ValueError(f"get_str_hash excepts str, but recept {type(string)}")
+    return hashlib.sha1(string.encode("utf8")).hexdigest()
 
 
 def insert_new_line_for_math(content):

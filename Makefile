@@ -20,7 +20,7 @@ prepare:
 	rsync  -avz  ./cert/ root@$(host):/etc/nginx/cert/
 	rsync  -avz  ./bin/ root@$(host):/etc/nginx/scripts/
 	ssh root@$(host) "bash /etc/nginx/scripts/config_nginx.sh"
-	ssh root@$(host) "nginx -t"
+	ssh root@$(host) "nginx -s reload"
 
 debug:
 	hexo clean
@@ -45,10 +45,6 @@ convert:
 
 build: clean convert
 	hexo generate --debug
-
-
-
-
 
 commit:
 	git add .
