@@ -17,7 +17,14 @@ timezone:
 theme: butterfly
 # butterfly theme config
 theme_config:
-  top_img: 'linear-gradient(20deg, #0062be, #925696, #cc426e, #fb0347)'
+  katex:
+    enable: true
+    # true 表示每一页都加载katex.js
+    # false 需要时加载，须在使用的Markdown Front-matter 加上 katex: true
+    per_page: true
+    hide_scrollbar: true
+  default_top_img: #335777
+  top_img: #335777
   #  头像
   avatar:
     img: /imgs/dogs.jpeg
@@ -25,8 +32,8 @@ theme_config:
   sharejs:
     enable: true
     sites: wechat,qq
-  index_site_info_top: 100px # 主页标题距离顶部距离  例如 300px/300em/300rem/10%
-  index_top_img_height: 267px #主页top_img高度 例如 300px/300em/300rem  不能使用百分比
+  index_site_info_top: 120px # 主页标题距离顶部距离  例如 300px/300em/300rem/10%
+  index_top_img_height: 400px #主页top_img高度 例如 300px/300em/300rem  不能使用百分比
   # 打字效果
   subtitle:
     startDelay: 300 # time before typing starts in milliseconds
@@ -96,7 +103,7 @@ theme_config:
     hide: false
     button: true
     mobile: true # display on mobile
-    position: left # left or right
+    position: right # left or right
     display:
       archive: true
       tag: true
@@ -289,21 +296,14 @@ search:
   format: html
 
 
-mathjax:
-  tags: all # or 'ams' or 'all'
-  single_dollars: true # enable single dollar signs as in-line math delimiters
-  cjk_width: 0.9 # relative CJK char width
-  normal_width: 0.6 # relative normal (monospace) width
-  append_css: true # add CSS to pages rendered by MathJax
-  every_page: true # if true, every page will be rendered by MathJax regardless the `mathjax` setting in Front-matter
-  packages: # extra packages to load
-  extension_options: { }
 
-
-ICP:
-  enable: true  # 是否启用ICP
-  url: https://beian.miit.gov.cn/  # 点击后的链接地址
-  text: 黔ICP备2022009239号-1 # 更改成自己的备案号
-  icon:    # 图标
-
+markdown:
+  plugins:
+    - markdown-it-mark
+    - markdown-it-ins
+    - markdown-it-footnote
+    - plugin:
+      name: '@neilsustc/markdown-it-katex'
+      options:
+        strict: false
 
