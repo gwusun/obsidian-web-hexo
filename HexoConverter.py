@@ -13,9 +13,7 @@ from util_log import get_logger
 log = get_logger()
 
 """
--  Only convert for specified tags, default containing tag: public
--  Remove all space ' '. 
-- 支持 pdf.jpeg 
+- Only convert the .md  specified tags=public
 - 文件名随机生成, 利于分享
 
 

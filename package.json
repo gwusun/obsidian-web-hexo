@@ -14,6 +14,7 @@
   "dependencies": {
     "@neilsustc/markdown-it-katex": "^1.0.0",
     "hexo": "^6.3.0",
+    "hexo-auto-excerpt": "^1.1.2",
     "hexo-deployer-git": "3.0.0",
     "hexo-filter-mathjax": "^0.9.0",
     "hexo-generator-archive": "^2.0.0",

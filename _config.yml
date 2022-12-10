@@ -4,11 +4,11 @@
 
 # Site
 title: Knowledge
-description:
+description: ""
 keywords:
 author: gsunwu@163.com
 language: zh-CN
-timezone: ''
+timezone:
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
@@ -17,6 +17,10 @@ timezone: ''
 theme: butterfly
 # butterfly theme config
 theme_config:
+  #  头像
+  avatar:
+    img: /imgs/dogs.jpeg
+    effect: false
   sharejs:
     enable: true
     sites: wechat,qq
@@ -83,7 +87,7 @@ theme_config:
       - https://cdn.jsdelivr.net/gh/Justlovesmile/CDN2/post/cover8.JPG
   toc:
     post: true
-    page: false
+    page: true
     number: true
     expand: true
     style_simple: false # for post
@@ -171,7 +175,7 @@ theme_config:
 url: https://www.gwusun.top
 #permalink: :year/:month/:day/:name.html
 #permalink: docs/:name.html
-permalink: p/:hash/
+permalink: :category/:hash.html
 permalink_defaults:
 pretty_urls:
   trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
@@ -301,3 +305,5 @@ ICP:
   url: https://beian.miit.gov.cn/  # 点击后的链接地址
   text: 黔ICP备2022009239号-1 # 更改成自己的备案号
   icon:    # 图标
+
+

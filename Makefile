@@ -9,7 +9,7 @@ h:
 	@echo "make prepare:\t prepare nginx environment to $(host)"
 
 run: clean convert
-	hexo server -w
+	hexo server --watch
 # upload to github
 d: build
 	mv ./public/Index.html ./public/index.html
@@ -34,8 +34,11 @@ install:
 clean:
 	hexo clean
 	rm -rf source/_posts
+	rm -rf source/images
 
 convert:
+	mkdir -p ./source/imgs
+	cp ./images/dogs.jpeg ./source/imgs
 	bash bin/init_categories_and_tags.sh
 	python HexoConverter.py $(obsidian_home) $(hexo_home)
 
@@ -47,6 +50,9 @@ build: clean convert
 
 
 
-
+commit:
+	git add .
+	git commit -m "update config"
+	git push origin main
 
 
