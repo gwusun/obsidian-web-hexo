@@ -17,6 +17,7 @@ timezone:
 theme: butterfly
 # butterfly theme config
 theme_config:
+  top_img: 'linear-gradient(20deg, #0062be, #925696, #cc426e, #fb0347)'
   #  头像
   avatar:
     img: /imgs/dogs.jpeg
