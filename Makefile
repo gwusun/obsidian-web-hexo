@@ -52,3 +52,7 @@ commit:
 	git push origin main
 
 
+
+app:
+	pyinstaller -F -w app.py
+	#pyinstaller -F -w publish.py

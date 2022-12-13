@@ -71,3 +71,9 @@ make d
 ``` 
 make run
 ```
+
+## todo
+
+- [ ] task
+- [ ] anchor
+- [ ] how hexo render .md in different directory to public.  

@@ -1,0 +1,1 @@
+([('app', '/Users/sunwu/SW-Research/hexo-websit/dist/app', 'EXECUTABLE')],)
