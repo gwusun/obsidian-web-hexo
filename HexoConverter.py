@@ -112,7 +112,7 @@ def convert_obsidian_toc_to_hexo_toc(content, hexo_toc_tag="@[toc]"):
 class HexoConverter:
     md_exts = ['.md']
 
-    def __init__(self, home, target, share_tag="public", target_md_dir="source/_posts",
+    def __init__(self, home, target, share_tag="share", target_md_dir="source/_posts",
                  target_assets_dir="source/images", statics_ext=['.png', '.gif', 'jpg', 'jpeg', '.pdf', '.excalidraw']
                  , callbacks=[]):
         """
@@ -227,16 +227,41 @@ class HexoConverter:
             raise e
 
     def _is_share_formatter(self, yaml_formatter):
+        """
+        Return True if the yaml formatter contain  `share: true` , otherwise false.
+        The following examples return False:
+
+        .. code-block::
+
+            'share: flase'
+            'share: `
+            'share: False'
+            'share: xxx `
+
+        Parameters
+        ----------
+        yaml_formatter :
+
+        Returns
+        -------
+
+        """
         if not isinstance(yaml_formatter, dict):
             return False
-        tags = yaml_formatter.get('tags')
-        if isinstance(tags, str):
-            if tags.lower() == self._share_tag.lower():
-                return True
-        if isinstance(tags, list):
-            tags = [str(tag).lower() if tag is not None else self._share_tag for tag in tags]
-            return self._share_tag in tags
-        return False
+        share_value = yaml_formatter.get(self._share_tag)
+        if share_value is None:
+            return False
+        if isinstance(share_value, str):
+            return False
+
+        if isinstance(share_value, bool):
+            return share_value == True
+        else:
+            raise ValueError(f"share in the yaml formatter must be single value. received {share_value}")
+            return False
+        # if isinstance(share_value, list):
+        # share_value = [str(tag).lower() if tag is not None else self._share_tag for tag in share_value]
+        # return self._share_tag in share_value
 
     def _get_markdown_yaml_formatter(self, content):
         """
@@ -573,3 +598,6 @@ if __name__ == '__main__':
                   callbacks=[insert_new_line_for_math,
                              convert_obsidian_toc_to_hexo_toc]
                   ).parse_markdown()
+    print("=" * 32)
+    print("Done")
+    print("=" * 32)

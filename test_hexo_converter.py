@@ -14,6 +14,7 @@ class TestConverter(TestCase):
         c = HexoConverter(home=self.home, target=self.target)
         tag = c._get_markdown_yaml_formatter("""---
 title: Tensor 实验
+share: false
 tags: 
   - private
 linter-yaml-title-alias: Tensor 实验
@@ -23,13 +24,14 @@ aliases:
   - Tensor 实验
 ---""")
         print(tag)
-        assert "private" in tag.get('tags')
+        assert tag.get('share') is False
 
     def test_yaml2(self):
         c = HexoConverter(home=self.home, target=self.target)
         tag = c._get_markdown_yaml_formatter("""---
         title: Tensor 实验
         tags: public
+        share: true
         linter-yaml-title-alias: Tensor 实验
         date modified: 2022-11-10 10:57:37 
         date created: 2022-11-09 20:12:55 
@@ -42,6 +44,7 @@ aliases:
         c = HexoConverter(home=self.home, target=self.target)
         tag = c._get_markdown_yaml_formatter("""---
         title: Tensor 实验
+        share: true
         tags: 
           - public
         linter-yaml-title-alias: Tensor 实验
@@ -58,6 +61,7 @@ aliases:
         title: Tensor 实验
         tags: 
           - s2
+        share: false
         linter-yaml-title-alias: Tensor 实验
         date modified: 2022-11-10 10:57:37 
         date created: 2022-11-09 20:12:55 
@@ -70,6 +74,7 @@ aliases:
     def test_share(self):
         tag = self.c._get_markdown_yaml_formatter("""---
 title: (2022)贵州大学商业数据分析课程看板
+share: true
 tags:
 - 贵州大学商业数据分析
 - public
@@ -89,13 +94,15 @@ aliases:
         # All linke like ![[]]
         c = HexoConverter(home=self.home, target=self.target)
         target = self.c._convert_wiki_images("![[b.pdf]]")
-        assert target == "<embed src='/images/0.pdf' width='100%' height='750' type='application/pdf'>"
+        assert target == "<embed src='/images/0fe9507aab79d2453ec206a070009d790d53bde6.pdf' width='100%' height='750' type='application/pdf'>"
 
         target = self.c._convert_wiki_images(" ![[static/attachment/second_result.pdf]]")
-        assert target == " <embed src='/images/1.pdf' width='100%' height='750' type='application/pdf'>"
+        assert target == " <embed src='/images/8356416f190bc12f0f5dbc479b4a8b2277f9c6d4.pdf' width='100%' height='750' type='application/pdf'>"
 
-        assert self.c._convert_wiki_images("![[b.png|300]]") == '![b.png](/images/2.png)'
-        assert self.c._convert_wiki_images("![[b.png]]") == '![b.png](/images/3.png)'
+        assert self.c._convert_wiki_images(
+            "![[b.png|300]]") == '![b.png](/images/84120802dfb025b465d51f522f235d9cf34e7dec.png)'
+        assert self.c._convert_wiki_images(
+            "![[b.png]]") == '![b.png](/images/84120802dfb025b465d51f522f235d9cf34e7dec.png)'
         assert self.c._convert_wiki_images("![[a]]") == '![[a]]'
 
     def test_math_converter(self):
@@ -129,3 +136,7 @@ aliases:
         assert get_wiki_link_abs_file("aaaa.pdf#111") == "aaaa.pdf"
         assert get_wiki_link_abs_file("abc/aaaa.pdf#111") == "abc/aaaa.pdf"
         assert get_wiki_link_abs_file("abc/aaaa.pdf|111") == "abc/aaaa.pdf"
+
+    def test_error_file(self):
+        # todo: test error
+        "/Users/sunwu/SW-Research/hexo-websit/tests/dates/看板.md"

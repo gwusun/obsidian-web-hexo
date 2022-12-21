@@ -2,45 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="43543d59-4ee8-4f62-90b4-ef5dd4e93e8d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/hexo-websit.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app.spec" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/app/Analysis-00.toc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/app/BUNDLE-00.toc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/app/EXE-00.toc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/app/PKG-00.toc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/app/PYZ-00.pyz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/app/PYZ-00.toc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/app/app.pkg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/app/base_library.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/app/warn-app.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/app/xref-app.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/publish/Analysis-00.toc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/publish/BUNDLE-00.toc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/publish/EXE-00.toc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/publish/PKG-00.toc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/publish/PYZ-00.pyz" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/publish/PYZ-00.toc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/publish/base_library.zip" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/publish/publish.pkg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/publish/warn-publish.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/publish/xref-publish.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist/app" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist/app.app/Contents/Info.plist" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist/app.app/Contents/MacOS/app" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist/app.app/Contents/Resources/icon-windowed.icns" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dist/app.app/Contents/_CodeSignature/CodeResources" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/publish.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/publish.spec" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.json" beforeDir="false" afterPath="$PROJECT_DIR$/db.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +120,7 @@
       <updated>1670905800809</updated>
       <workItem from="1670905803369" duration="35000" />
       <workItem from="1670905854016" duration="53000" />
-      <workItem from="1670905924058" duration="9059000" />
+      <workItem from="1670905924058" duration="9147000" />
     </task>
     <servers />
   </component>
