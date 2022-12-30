@@ -12,8 +12,11 @@ run: clean convert
 	hexo server --watch
 # upload to github
 d: build
-	mv ./public/Index.html ./public/index.html
-	rsync  --delete -avz  /Users/sunwu/SW-Research/hexo-websit/public/* root@$(host):/usr/blog/hexo/
+	@mv ./public/Index.html ./public/index.html
+	#rsync  --delete -avz  /Users/sunwu/SW-Research/hexo-websit/public/* root@$(host):/usr/blog/hexo/
+	rsync  -avz  /Users/sunwu/SW-Research/hexo-websit/public/* root@$(host):/usr/blog/hexo/
+
+deploy: d
 
 prepare:
 	ssh root@$(host) "nginx -t"

@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from HexoConverter import HexoConverter, insert_new_line_for_math, \
-    get_wiki_link_abs_file
+    get_wiki_link_abs_file, post_process_anchor
 
 
 class TestConverter(TestCase):
@@ -10,7 +10,7 @@ class TestConverter(TestCase):
         self.target = "/Users/sunwu/SW-Research/hexo-websit"
         self.c = HexoConverter(home=self.home, target=self.target)
 
-    def test_convert(self):
+    def test_yaml01(self):
         c = HexoConverter(home=self.home, target=self.target)
         tag = c._get_markdown_yaml_formatter("""---
 title: Tensor 实验
@@ -26,7 +26,7 @@ aliases:
         print(tag)
         assert tag.get('share') is False
 
-    def test_yaml2(self):
+    def test_yaml02(self):
         c = HexoConverter(home=self.home, target=self.target)
         tag = c._get_markdown_yaml_formatter("""---
         title: Tensor 实验
@@ -71,7 +71,7 @@ aliases:
         print(tag)
         assert c._is_share_formatter(tag) is False
 
-    def test_share(self):
+    def test_yaml_share(self):
         tag = self.c._get_markdown_yaml_formatter("""---
 title: (2022)贵州大学商业数据分析课程看板
 share: true
@@ -113,13 +113,9 @@ aliases:
         # contain space in fine name
         assert self.c._convert_wiki_links("a.md", "兼容 [[Docs/2022-11-25实验结果|上次实验结果]]") \
                == "兼容 <a href='{% post_path 2022-11-25实验结果 %}'>2022-11-25实验结果</a>"
-        assert self.c._convert_wiki_links("a.md", "兼容 [[Docs/2022-11-25实验结果#上次实验结果]]") \
-               == "兼容 <a href='{% post_path 2022-11-25实验结果 %}'>2022-11-25实验结果</a>"
 
         # all link like  [[]]
         assert self.c._convert_wiki_links("a.md", "兼容 [[Docs/2022-11-25 实验结果|上次实验结果]]") \
-               == "兼容 <a href='{% post_path 2022-11-25 实验结果 %}'>2022-11-25 实验结果</a>"
-        assert self.c._convert_wiki_links("a.md", "兼容 [[Docs/2022-11-25 实验结果#上次实验结果]]") \
                == "兼容 <a href='{% post_path 2022-11-25 实验结果 %}'>2022-11-25 实验结果</a>"
 
         assert self.c._convert_wiki_links("a.md", "$[[aa]]$") == '$[[aa]]$'
@@ -127,16 +123,22 @@ aliases:
         assert self.c._convert_wiki_links("a.md", "![[aa]]") == '![[aa]]'
         assert self.c._convert_wiki_links("a.md", "[[aa]]") == "<a href='{% post_path aa %}'>aa</a>"
 
+    def test_anchor(self):
+        assert self.c._convert_wiki_links("a.md", "兼容 [[Docs/2022-11-25实验结果#上次实验结果]]") \
+               == "兼容 <a href='{% post_path 2022-11-25实验结果 %}'>2022-11-25实验结果</a>"
+        assert self.c._convert_wiki_links("a.md", "兼容 [[Docs/2022-11-25 实验结果#上次实验结果]]") \
+               == "兼容 <a href='{% post_path 2022-11-25 实验结果 %}'>2022-11-25 实验结果</a>"
+        assert get_wiki_link_abs_file("aaaa.pdf#111") == "aaaa.pdf"
+        assert get_wiki_link_abs_file("abc/aaaa.pdf#111") == "abc/aaaa.pdf"
+        assert get_wiki_link_abs_file("abc/aaaa.pdf|111") == "abc/aaaa.pdf"
+
     def test_compatibility(self):
         # todo:  兼容 [[Docs/2022-11-25 实验结果|上次实验结果]]
         # todo:  兼容 ![[static/attachment/Pasted image 20221201110235.png|400]]
         pass
 
-    def test_link_file(self):
-        assert get_wiki_link_abs_file("aaaa.pdf#111") == "aaaa.pdf"
-        assert get_wiki_link_abs_file("abc/aaaa.pdf#111") == "abc/aaaa.pdf"
-        assert get_wiki_link_abs_file("abc/aaaa.pdf|111") == "abc/aaaa.pdf"
-
-    def test_error_file(self):
-        # todo: test error
-        "/Users/sunwu/SW-Research/hexo-websit/tests/dates/看板.md"
+    def test_anchor_post_process(self):
+        assert post_process_anchor("#上次实验结果") == "#上次实验结果"
+        self.assertEqual(post_process_anchor("#上次 实验结果"), "#上次-实验结果")
+        self.assertEqual(post_process_anchor("#上次 实验 结果"), "#上次-实验-结果")
+        self.assertEqual(post_process_anchor("#上次　实验结果"), "#上次-实验结果")

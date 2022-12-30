@@ -14,6 +14,8 @@ log = get_logger()
 """
 - Only convert the .md  specified tags=public
 - Randomly generated the image filename by UUID
+- 目标文件名中的"空格" 全部被替换为 "-" 
+- 
 
 
 ref:
@@ -81,11 +83,11 @@ def get_wiki_link_file_name(wiki_link: str):
     base_name = get_wiki_link_abs_file(wiki_link).split("/")[-1]
     if wiki_link.find("#") > -1:
         # compact  with 'Docs/2022-11-25 实验结果#上次实验结果'
-        return base_name.split("#")[0]
+        return convert_space_to_dash(base_name.split("#")[0])
     elif wiki_link.find("|") > -1:
-        return base_name.split("|")[0]
+        return convert_space_to_dash(base_name.split("|")[0])
     else:
-        return base_name
+        return convert_space_to_dash(base_name)
 
 
 def get_wiki_link_file_alias(cur_link: str):
@@ -109,6 +111,52 @@ def convert_obsidian_toc_to_hexo_toc(content, hexo_toc_tag="@[toc]"):
 # https://www.markdownguide.org/basic-syntax/
 
 # /Users/sunwu/SW-Research/typecho/usr/637c79e786d72.db
+def post_process_anchor(source_link):
+    """
+    Get the anchor text from the source link.
+
+    Examples
+    --------
+
+    .. code-block:: python
+
+        assert post_process_anchor("#上次实验结果") == "#上次实验结果"
+        self.assertEqual(post_process_anchor("#上次 实验结果"), "#上次-实验结果")
+        self.assertEqual(post_process_anchor("#上次 实验 结果"), "#上次-实验-结果")
+        self.assertEqual(post_process_anchor("#上次　实验结果"), "#上次-实验结果")
+
+
+    Parameters
+    ----------
+    source_link :
+
+    Returns
+    -------
+
+    """
+    _anchor = re.search("(#.*)", source_link)
+    if _anchor is None:
+        return ""
+    else:
+        _anchor_text = _anchor.group(0)
+        return convert_space_to_dash(_anchor_text)
+
+
+def convert_space_to_dash(text):
+    """
+    Converts a space to -
+
+    Parameters
+    ----------
+    text :
+
+    Returns
+    -------
+
+    """
+    return re.sub("\\s", '-', text)
+
+
 class HexoConverter:
     md_exts = ['.md']
 
@@ -318,21 +366,22 @@ class HexoConverter:
                         self._convert_one_markdown(link_file)
 
                 if source_link.startswith("#"):
-                    log.warning("[[#xxx]] is not supported")
-                    continue
+                    _anchor = post_process_anchor(source_link)
+                    wiki_link_reg = f"[[{source_link}]]"
+                    target_link = f"<a href='{_anchor}'>{_anchor}</a>"
+                    log.info(f"target link:\t{target_link}")
+                    content = content.replace(wiki_link_reg, target_link)
+                else:
+                    # target: f"<a href='{{% post_path {wiki_link_file_name} %}}'>{wiki_link_file_name}</a>"
+                    wiki_link_file_name = get_wiki_link_file_name(source_link)
+                    if wiki_link_file_name == "" or wiki_link_file_name is None:
+                        raise RuntimeError("wiki_link_file_name cant be empty. ")
 
-                # compat with [[Docs/2022-11-25 实验结果#上次实验结果]]
-                # compat with [[Docs/2022-11-25 实验结果|上次实验结果]]
-                #
-                # target: f"<a href='{{% post_path {wiki_link_file_name} %}}'>{wiki_link_file_name}</a>"
-                wiki_link_file_name = get_wiki_link_file_name(source_link)
-                if wiki_link_file_name == "" or wiki_link_file_name is None:
-                    raise RuntimeError("wiki_link_file_name cant be empty. ")
-
-                wiki_link_reg = f"[[{source_link}]]"
-                target_link = f"<a href='{{% post_path {wiki_link_file_name} %}}'>{wiki_link_file_name}</a>"
-                log.info(f"target link:\t{target_link}")
-                content = content.replace(wiki_link_reg, target_link)
+                    _anchor = post_process_anchor(source_link)
+                    wiki_link_reg = f"[[{source_link}]]"
+                    target_link = f"<a href='{{% post_path {wiki_link_file_name} %}}{_anchor}'>{wiki_link_file_name}{_anchor}</a>"
+                    log.info(f"target link:\t{target_link}")
+                    content = content.replace(wiki_link_reg, target_link)
 
         assert content is not None
         return content
@@ -354,6 +403,7 @@ class HexoConverter:
         assert content is not None
         content = self._convert_wiki_links(file, content)
         assert content is not None
+
         for fun in self._callbacks:
             content = fun(content)
 
@@ -376,8 +426,9 @@ class HexoConverter:
         if file is None:
             return None
         else:
-            target_file_path = os.path.join(self._target, self._target_md_dir, os.path.basename(file)) \
-                .replace(" ", "")
+            base_name = os.path.basename(file)
+            base_name = convert_space_to_dash(base_name)
+            target_file_path = os.path.join(self._target, self._target_md_dir, base_name)
             if not os.path.exists(os.path.dirname(target_file_path)):
                 os.makedirs(os.path.dirname(target_file_path))
             return target_file_path

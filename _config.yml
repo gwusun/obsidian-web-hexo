@@ -182,11 +182,7 @@ theme_config:
     enable: true
     preload: true
   copy:
-    enable: false
-    copyright:
-      enable: false
-      limit_count: 50
-
+    enable: true
 
 
 
@@ -266,11 +262,20 @@ ignore:
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
-deploy:
-  type: git
-  repo: git@github.com:gwusun/gwusun.github.io.git
-  branch: main
+#deploy:
+#  type: git
+#  repo: git@github.com:gwusun/gwusun.github.io.git
+#  branch: main
 
+#deploy:
+#  type: rsync
+#  host: 114.55.41.175
+#  user: root
+#  root: <root>
+#  port: [port]
+#  delete: [true|false]
+#  verbose: [true|false]
+#  ignore_errors: [true|false]
 
 jsonContent:
   meta: true
