@@ -20,6 +20,15 @@ log = get_logger()
 
 ref:
 https://butterfly.js.org
+
+
+##  excalidraw
+COCA源码分析 2022-12-23 14.56.42.excalidraw.png
+COCA源码分析 2023-01-05 09.37.53.excalidraw.md
+COCA源码分析 2023-01-05 09.37.53.excalidraw.png
+COCA源码分析 2023-01-04 09.18.29.excalidraw.md
+COCA源码分析 2023-01-04 09.18.29.excalidraw.png
+COCA源码分析 2022-12-23 14.56.42.excalidraw.md
 """
 
 
@@ -335,7 +344,7 @@ class HexoConverter:
         else:
             return dict()
 
-    def _convert_wiki_links(self, file, content):
+    def _convert_wiki_anchor(self, file, content) -> str:
         """
         #  convert [[xx]] to link, which not start with ! and end with $
         #  [[Docs/2022-11-25 实验结果|上次实验结果]]
@@ -350,8 +359,10 @@ class HexoConverter:
 
         """
 
-        links = re.findall("(?<!!)\[\[(.*?)\]\](?!\$)", content)
-        for source_link in links:
+        links = re.findall("(?<!!)(\[\[((.*?)?(#.*?)?)\]\])(?!\$)", content)
+        for link in links:
+            # ('[[Docs/2022-11-25实验结果#上次实验结果]]', 'Docs/2022-11-25实验结果#上次实验结果', 'Docs/2022-11-25实验结果', '#上次实验结果')
+            source_link = link[2]
             link_file = self._get_file_from_wiki_link(source_link)
             source_file = self._get_file_from_wiki_link(link_file)
             if link_file is None:
@@ -365,23 +376,65 @@ class HexoConverter:
                         # If link_file == file, means link itself, cant to recursive.
                         self._convert_one_markdown(link_file)
 
-                if source_link.startswith("#"):
-                    _anchor = post_process_anchor(source_link)
-                    wiki_link_reg = f"[[{source_link}]]"
+                if link[2] == '':
+                    _anchor = post_process_anchor(link[1])
                     target_link = f"<a href='{_anchor}'>{_anchor}</a>"
                     log.info(f"target link:\t{target_link}")
-                    content = content.replace(wiki_link_reg, target_link)
+                    content = content.replace(link[0], target_link)
                 else:
                     # target: f"<a href='{{% post_path {wiki_link_file_name} %}}'>{wiki_link_file_name}</a>"
                     wiki_link_file_name = get_wiki_link_file_name(source_link)
                     if wiki_link_file_name == "" or wiki_link_file_name is None:
                         raise RuntimeError("wiki_link_file_name cant be empty. ")
 
-                    _anchor = post_process_anchor(source_link)
-                    wiki_link_reg = f"[[{source_link}]]"
+                    _anchor = post_process_anchor(link[3])
                     target_link = f"<a href='{{% post_path {wiki_link_file_name} %}}{_anchor}'>{wiki_link_file_name}{_anchor}</a>"
                     log.info(f"target link:\t{target_link}")
-                    content = content.replace(wiki_link_reg, target_link)
+                    content = content.replace(link[0], target_link)
+
+        assert content is not None
+        return content
+
+    def _convert_wiki_link(self, file, content) -> str:
+        """
+        #  convert [[xx]] to link, which not start with ! and end with $
+        #  [[Docs/2022-11-25 实验结果|上次实验结果]]
+
+        #  Convert to : {% post_link a.md 点击这里查看这篇文章 %}
+        Parameters
+        ----------
+        content :
+
+        Returns
+        -------
+
+        """
+
+        links = re.findall("(?<!!)(\[\[(([^#]*?)?)\]\])(?!\$)", content)
+        for link in links:
+            # ('[[aa]]', 'aa', 'aa')
+            source_link = link[1]
+            link_file = self._get_file_from_wiki_link(source_link)
+            source_file = self._get_file_from_wiki_link(link_file)
+            if link_file is None:
+                log.info(f"link_file in {source_link} is None")
+                continue
+            else:
+                # if the file contain public tag and not convert done,  convert it.
+                if self._is_shared_markdown_file(source_file) and not self._is_file_convert_done(source_file):
+                    if not link_file == file:
+                        # The  file is not  link itself,  recursively convert file.
+                        # If link_file == file, means link itself, cant to recursive.
+                        self._convert_one_markdown(link_file)
+
+                # target: f"<a href='{{% post_path {wiki_link_file_name} %}}'>{wiki_link_file_name}</a>"
+                wiki_link_file_name = get_wiki_link_file_name(source_link)
+                if wiki_link_file_name == "" or wiki_link_file_name is None:
+                    raise RuntimeError("wiki_link_file_name cant be empty. ")
+
+                target_link = f"<a href='{{% post_path {wiki_link_file_name} %}}'>{wiki_link_file_name}</a>"
+                log.info(f"target link:\t{target_link}")
+                content = content.replace(link[0], target_link)
 
         assert content is not None
         return content
@@ -401,7 +454,13 @@ class HexoConverter:
             return
         content = self._convert_wiki_images(content)
         assert content is not None
-        content = self._convert_wiki_links(file, content)
+        content = self._convert_wiki_pdf(content)
+        assert content is not None
+        content = self._convert_wiki_excalidraw(content)
+        assert content is not None
+        content = self._convert_wiki_link(file, content)
+        assert content is not None
+        content = self._convert_wiki_anchor(file, content)
         assert content is not None
 
         for fun in self._callbacks:
@@ -433,6 +492,36 @@ class HexoConverter:
                 os.makedirs(os.path.dirname(target_file_path))
             return target_file_path
 
+    def _convert_wiki_pdf(self, content):
+        links = re.findall(f"(!\[\[(((.*?)(.pdf))(.*?))\]\])", content, re.IGNORECASE)
+        for link in links:
+            # ('![[a.pdf|300]]', 'a.pdf|300', 'a.pdf', 'a', '.pdf', '|300')
+            source_link = link[2]
+            origin_file_name = get_wiki_link_abs_file(source_link)
+            # '/Users/sunwu/SW-KnowledgeBase/static/attachment/second_result.pdf'
+            source_abs_path = os.path.join(self._home, origin_file_name)
+            # '/Users/sunwu/SW-Research/hexo-websit/source/images/_static_attachment_second_result.pdf'
+
+            # <embed src="/images/static_attachment_second_result.pdf" width="100%" height="750" type="application/pdf">
+            target_relative_link = self.copy_static_file(source_abs_path)
+            target_line = f"<embed src='{target_relative_link}' width='100%' height='750' type='application/pdf'>"
+            content = content.replace(link[0], target_line)
+        return content
+
+    def _convert_wiki_excalidraw(self, content):
+        links = re.findall(f"(!\[\[(((.*?)(.excalidraw))(.*?))\]\])", content, re.IGNORECASE)
+        for link in links:
+            # ('![[a.pdf|300]]', 'a.pdf|300', 'a.pdf', 'a', '.pdf', '|300')
+            source_link = link[2]
+            origin_file_name = get_wiki_link_abs_file(source_link)
+            # '/Users/sunwu/SW-KnowledgeBase/static/attachment/second_result.pdf'
+            source_abs_path = os.path.join(self._home, origin_file_name)
+            source_abs_path_png = source_abs_path + ".png"
+            target_relative_link = self.copy_static_file(source_abs_path_png)
+            target_line = f"![{origin_file_name}]({target_relative_link})"
+            content = content.replace(link[0], target_line)
+        return content
+
     def _convert_wiki_images(self, content):
         """
         Convert wiki links images to markdown images
@@ -449,31 +538,23 @@ class HexoConverter:
         -------
 
         """
-        links = re.findall("!\[\[(.*?)\]\]", content)
-        for source_link in links:
+        # Isaac(?=Asimov)
+        links = re.findall(f"(!\[\[((.*?)(.png|.jpg|.svg|.jpeg|.gif)(.*?))\]\])", content, re.IGNORECASE)
+        for link in links:
+            # [('![[b.png|300]]', 'b.png|300', 'b', '.png', '|300'),
+            # ('![[a.jpeg]]', 'a.jpeg', 'a', '.jpeg', ''),
+            # ('![[cc.jpg]]', 'cc.jpg', 'cc', '.jpg', '')]
+            source_link = link[1]
             origin_file_name = get_wiki_link_abs_file(source_link)
             # '/Users/sunwu/SW-KnowledgeBase/static/attachment/second_result.pdf'
             source_abs_path = os.path.join(self._home, origin_file_name)
             # '/Users/sunwu/SW-Research/hexo-websit/source/images/_static_attachment_second_result.pdf'
 
-            if os.path.splitext(origin_file_name)[-1] == ".pdf":
-                # <embed src="/images/static_attachment_second_result.pdf" width="100%" height="750" type="application/pdf">
-                target_relative_link = self.copy_static_file(source_abs_path)
-                wiki_link_reg = f"![[{source_link}]]"
-                target_line = f"<embed src='{target_relative_link}' width='100%' height='750' type='application/pdf'>"
-                content = content.replace(wiki_link_reg, target_line)
-                pass
-            else:
-                ext = os.path.splitext(origin_file_name)[-1]
-                if ext in self._statics_ext:
-                    # Change the link content
-                    target_relative_link = self.copy_static_file(source_abs_path)
-                    wiki_link_reg = f"![[{source_link}]]"
-                    target_line = f"![{origin_file_name}]({target_relative_link})"
-                    content = content.replace(wiki_link_reg, target_line)
-                else:
-                    # todo
-                    pass
+            # Change the link content
+            target_relative_link = self.copy_static_file(source_abs_path)
+            wiki_link_reg = f"![[{source_link}]]"
+            target_line = f"![{origin_file_name}]({target_relative_link})"
+            content = content.replace(wiki_link_reg, target_line)
 
         return content
 

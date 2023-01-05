@@ -13,8 +13,7 @@ run: clean convert
 # upload to github
 d: build
 	@mv ./public/Index.html ./public/index.html
-	#rsync  --delete -avz  /Users/sunwu/SW-Research/hexo-websit/public/* root@$(host):/usr/blog/hexo/
-	rsync  -avz  /Users/sunwu/SW-Research/hexo-websit/public/* root@$(host):/usr/blog/hexo/
+	rsync  --delete -avz  /Users/sunwu/SW-Research/hexo-websit/public/* root@$(host):/usr/blog/hexo/
 
 deploy: d
 
@@ -25,7 +24,7 @@ prepare:
 	ssh root@$(host) "bash /etc/nginx/scripts/config_nginx.sh"
 	ssh root@$(host) "nginx -s reload"
 
-debug:
+debug:  convert
 	hexo clean
 	hexo server --debug
 
@@ -43,7 +42,7 @@ convert:
 	mkdir -p ./source/imgs
 	cp ./images/dogs.jpeg ./source/imgs
 	bash bin/init_categories_and_tags.sh
-	python HexoConverter.py $(obsidian_home) $(hexo_home)
+	python ob2md/src/HexoConverter.py $(obsidian_home) $(hexo_home)
 
 
 build: clean convert

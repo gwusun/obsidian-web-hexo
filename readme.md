@@ -23,9 +23,14 @@ Click [Online demo](https://gwusun.github.io/03-线性回归原理分析及实�
 
 ## Requirements
 
-New link format must be set as `Absolute path in vault`:
+1. New link format must be set as `Absolute path in vault`:
 ![](./images/requirement_of_hexo.png)
 
+2. Open auto-export PNG for your Excalidraw
+![](images/Excalidraw_setting.png)
+
+
+version of my environment
 ``` 
 $ hexo v
 hexo: 6.3.0
