@@ -332,7 +332,7 @@ class HexoConverter:
         -------
 
         """
-        yaml_for = re.search("^---(.*?)---", content, re.S)
+        yaml_for = re.match("^---(.*?)---", content, re.S)
         if yaml_for is not None:
             yaml_header = yaml_for.group(1)
             try:
@@ -379,7 +379,6 @@ class HexoConverter:
                 if link[2] == '':
                     _anchor = post_process_anchor(link[1])
                     target_link = f"<a href='{_anchor}'>{_anchor}</a>"
-                    log.info(f"target link:\t{target_link}")
                     content = content.replace(link[0], target_link)
                 else:
                     # target: f"<a href='{{% post_path {wiki_link_file_name} %}}'>{wiki_link_file_name}</a>"
@@ -389,7 +388,6 @@ class HexoConverter:
 
                     _anchor = post_process_anchor(link[3])
                     target_link = f"<a href='{{% post_path {wiki_link_file_name} %}}{_anchor}'>{wiki_link_file_name}{_anchor}</a>"
-                    log.info(f"target link:\t{target_link}")
                     content = content.replace(link[0], target_link)
 
         assert content is not None
@@ -431,9 +429,7 @@ class HexoConverter:
                 wiki_link_file_name = get_wiki_link_file_name(source_link)
                 if wiki_link_file_name == "" or wiki_link_file_name is None:
                     raise RuntimeError("wiki_link_file_name cant be empty. ")
-
                 target_link = f"<a href='{{% post_path {wiki_link_file_name} %}}'>{wiki_link_file_name}</a>"
-                log.info(f"target link:\t{target_link}")
                 content = content.replace(link[0], target_link)
 
         assert content is not None

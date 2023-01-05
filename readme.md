@@ -79,6 +79,6 @@ make run
 
 ## todo
 
-- [ ] task
+- [x] task
 - [x] anchor 
 - [x] Excalidraw
