@@ -3,7 +3,7 @@
 A web-based markdown viewer based on [hexo](https://hexo.io) optimized for Obsidian.
 ![https://gwusun.github.io/03-线性回归原理分析及实现.html](./images/home.png)
 
-Click [Online demo](https://gwusun.github.io/03-线性回归原理分析及实现.html) to see more detail.
+Click [Online demo](https://gwusun.top) to see more detail.
 
 ## Tutorial
 
